@@ -55,9 +55,12 @@
 
   static inline uint64_t rdtsc() {
     uint32_t hi, lo;
-    // TODO(awreece) Use cpuid or rdtscp to serialize?
-    // http://www.ccsl.carleton.ca/~jamuir/rdtscpm1.pdf
-    asm volatile("rdtsc" : "=a" (lo), "=d" (hi));
+    // We use rdtscp to serialize, since the internet seems to think that cpuid
+    // is slow. This serialization is necessary to prevent instruction
+    // reordering, as described in this (old) pdf: http://goo.gl/7vZqT
+    //
+    // Note that rdtscp will only be available on new (
+    asm volatile("rdtscp" : "=a" (lo), "=d" (hi) : /* No input. */ : "%ecx");
     return (((uint64_t)hi) << 32) | (uint64_t)lo;
   }
 
