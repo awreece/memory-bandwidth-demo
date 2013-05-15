@@ -8,15 +8,15 @@ I expect 25.6 GB/s.
 Instead, I get:
 ~~~
 $ ./memory_profiler
-              read_memory_loop:  3.18 GiB/s
-               read_memory_sse:  6.49 GiB/s
-               read_memory_avx:  8.62 GiB/s
-             write_memory_loop:  3.22 GiB/s
-              write_memory_sse:  3.04 GiB/s
-  write_memory_nontemporal_sse:  3.28 GiB/s
-              write_memory_avx:  6.05 GiB/s
-  write_memory_nontemporal_avx: 10.90 GiB/s
-           write_memory_memset: 17.02 GiB/s
+              read_memory_loop: 13.24 GiB/s
+               read_memory_sse: 15.98 GiB/s
+               read_memory_avx: 16.75 GiB/s
+             write_memory_loop: 17.01 GiB/s
+              write_memory_sse:  9.16 GiB/s
+  write_memory_nontemporal_sse: 17.00 GiB/s
+              write_memory_avx:  9.31 GiB/s
+  write_memory_nontemporal_avx: 16.53 GiB/s
+           write_memory_memset: 17.10 GiB/s
 ~~~
 
 I don't get anywhere close to the full bandwidth, even on reads. I think I

@@ -1,5 +1,5 @@
 memory_profiler: main.c monotonic_timer.c functions.c
-	clang -march=native $^ -o $@
+	clang -O3 -march=native $^ -o $@
 
 .PHONY: run
 run: memory_profiler
