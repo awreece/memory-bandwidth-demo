@@ -56,6 +56,8 @@ void timeit(void (*function)(void*, size_t), char* name) {
 int main() {
   memset(array, 0xFF, SIZE);  // un-ZFOD the page.
 
+  // TODO(awreece) iopl(0) and cli/sti?
+
   timefun(read_memory_loop);
 #ifdef __SSE4_1__
   timefun(read_memory_sse);
