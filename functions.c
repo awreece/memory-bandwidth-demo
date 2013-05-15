@@ -1,7 +1,9 @@
+// Copyright 2013 Alex Reece.
+
+#include "./functions.h"
+
 #include <assert.h>
 #include <string.h>
-
-#include "functions.h"
 
 #ifdef __SSE4_1__
 #include <smmintrin.h>

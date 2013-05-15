@@ -1,4 +1,5 @@
 // A simple memory profiler.
+// Copyright 2013 Alex Reece.
 //
 // Each of the write_memory_* functions read from a 1GB array. Each of the
 // write_memory_* writes to the 1GB array. The goal is to get the max memory
@@ -14,8 +15,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "functions.h"
-#include "monotonic_timer.h"
+#include "./functions.h"
+#include "./monotonic_timer.h"
 
 #define SAMPLES 5
 #define BYTES_PER_GB (1024*1024*1024LL)
@@ -34,7 +35,7 @@ static inline double to_bw(size_t bytes, double secs) {
 // Time a function, printing out time to perform the memory operation and
 // the computed memory bandwidth.
 #define timefun(f) timeit(f, #f)
-void timeit(void (*function)(void*,size_t), char* name) {
+void timeit(void (*function)(void*, size_t), char* name) {
   double min = INFINITY;
   size_t i;
   for (i = 0; i < SAMPLES; i++) {
@@ -54,7 +55,7 @@ void timeit(void (*function)(void*,size_t), char* name) {
 }
 
 int main() {
-  memset(array, 0xFF, SIZE); // un-ZFOD the page.
+  memset(array, 0xFF, SIZE);  // un-ZFOD the page.
 
   timefun(read_memory_loop);
 #ifdef __SSE4_1__

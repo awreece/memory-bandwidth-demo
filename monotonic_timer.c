@@ -16,8 +16,8 @@
   }
 
 #elif __APPLE__
-  // If we don't have CLOCK_MONOTONIC, we might be on a Mac. There we instead use
-  // mach_absolute_time().
+  // If we don't have CLOCK_MONOTONIC, we might be on a Mac. There we instead
+  // use mach_absolute_time().
 
   #include <mach/mach_time.h>
 
@@ -39,7 +39,7 @@
 #else
   // Fall back to rdtsc.
   static inline uint64_t rdtsc() {
-    uint32_t hi,lo;
+    uint32_t hi, lo;
     // TODO(awreece) Use cpuid or rdtscp to serialize?
     // http://www.ccsl.carleton.ca/~jamuir/rdtscpm1.pdf
     asm volatile("rdtsc" : "=a" (lo), "=d" (hi));
@@ -54,7 +54,7 @@
     usleep(USECS_PER_SEC);
     after = rdtsc();
 
-    rdtsc_per_sec = after - before; 
+    rdtsc_per_sec = after - before;
   }
 
   double monotonic_time() {
