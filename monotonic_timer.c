@@ -34,9 +34,12 @@
     return dtime / NANOS_PER_SECF;
   }
 
-// #elif _WIN64 use QueryPerformanceCounter and QueryPerformanceFrequency
+// #elif _WIN64
+// TODO(awreece) QueryPerformanceCounter and QueryPerformanceFrequency
 
 #else
+  #warning Falling back to rdtsc! Current implementation isn't satisfactory.
+
   // Fall back to rdtsc.
   static inline uint64_t rdtsc() {
     uint32_t hi, lo;
