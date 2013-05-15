@@ -5,13 +5,13 @@
 #define NANOS_PER_SECF 1000000000.0
 
 #if _POSIX_TIMERS > 0 && _POSIX_MONOTONIC_CLOCK > 0
-  // If we have it, use clock_monotonic_time and CLOCK_MONOTONIC.
+  // If we have it, use clock_gettime and CLOCK_MONOTONIC.
 
   #include <time.h>
 
   double monotonic_time() {
     struct timespec time;
-    clock_monotonic_time(CLOCK_MONOTONIC, &time);
+    clock_gettime(CLOCK_MONOTONIC, &time);
     return ((double) time.tv_sec) + ((double) time.tv_nsec / (NANOS_PER_SECF));
   }
 
