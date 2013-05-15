@@ -5,7 +5,23 @@ I've been attempting to achieve the theoretical best memory bandwidth for reads
 and writes on my machine. For a [Retina Macbook Pro](http://ark.intel.com/products/64891/Intel-Core-i7-3720QM-Processor-6M-Cache-up-to-3_60-GHz), 
 I expect 25.6 GB/s. 
 
-Instead, I get:
+I've tried a number of approaches:
+
+-   `read_memory_loop` does a simple `for (i = 0; i < size; *i++);`
+-   `read_memory_sse` uses SSE packed aligned loads to read 16 bytes at a time.
+-   `read_memory_avx` use AVX packed aligned stores to read 32 bytes at a time.
+-   `write_memory_loop` does a simple `for (i = 0; i < size; *i++ = 1);`
+-   `write_memory_sse` uses SSE packed aligned stores to write 16 bytes at a 
+    time.
+-   `write_memory_nontemporal_sse` uses nontemporal SSE packed aligned stores to
+    write 16 bytes at a time and bypass the cache.
+-   `write_memory_avx` uses AVX packed aligned stores to write 32 bytes at a 
+    time.
+-   `write_memory_nontemporal_avx` uses nontemporal AVX packed aligned stores to
+    write 32 bytes at a time and bypass the cache.
+-   `write_memory_memset` is merely a wrapper for `memset`.
+
+Profiling, I get:
 ~~~
 $ ./memory_profiler
               read_memory_loop: 13.24 GiB/s
