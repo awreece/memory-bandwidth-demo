@@ -43,7 +43,13 @@
 // TODO(awreece) QueryPerformanceCounter and QueryPerformanceFrequency
 
 #else
-  // Fall back to rdtsc.
+  // Fall back to rdtsc. The reason we don't use clock() is this scary message
+  // from the man page:
+  //     "On several other implementations, the value returned by clock() also
+  //      includes the times of any children whose status has been collected via
+  //      wait(2) (or another wait-type call)."
+  //
+  // Also, clock() only has microsecond accuracy.
   #warning Falling back to rdtsc! Current implementation isnt satisfactory.
 
   #include <stdint.h>
