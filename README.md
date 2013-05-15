@@ -35,7 +35,25 @@ $ ./memory_profiler
            write_memory_memset: 17.10 GiB/s
 ~~~
 
-I don't get anywhere close to the full bandwidth, even on reads. Also, it is
+I don't get anywhere close to the full bandwidth, even on reads. Interestingly,
+I tried to run in single user mode to eliminate any background bus traffic and
+got results that were considerably lower than when I ran normally (I don't think
+I fully understand what is going on in single user mode):
+
+~~~
+# ./memory_profiler
+              read_memory_loop: 10.68 GiB/s
+               read_memory_sse: 13.46 GiB/s
+               read_memory_avx: 13.62 GiB/s
+             write_memory_loop: 12.84 GiB/s
+              write_memory_sse:  8.93 GiB/s
+  write_memory_nontemporal_sse: 12.84 GiB/s
+              write_memory_avx:  8.91 GiB/s
+  write_memory_nontemporal_avx: 12.65 GiB/s
+           write_memory_memset: 12.84 GiB/s
+~~~
+
+Also, it is
 important to realize that `write_memory_loop` gets optimized to a call to
 `memset` when reading the numbers above (all other functions are more or less
 what you expect):
