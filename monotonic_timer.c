@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #define NANOS_PER_SECF 1000000000.0
+#define USECS_PER_SEC 1000000
 
 #if _POSIX_TIMERS > 0 && _POSIX_MONOTONIC_CLOCK > 0
   // If we have it, use clock_gettime and CLOCK_MONOTONIC.
@@ -40,9 +41,11 @@
 // TODO(awreece) QueryPerformanceCounter and QueryPerformanceFrequency
 
 #else
-  #warning Falling back to rdtsc! Current implementation isn't satisfactory.
-
   // Fall back to rdtsc.
+  #warning Falling back to rdtsc! Current implementation isnt satisfactory.
+
+  #include <stdint.h>
+
   static inline uint64_t rdtsc() {
     uint32_t hi, lo;
     // TODO(awreece) Use cpuid or rdtscp to serialize?
@@ -63,7 +66,7 @@
   }
 
   double monotonic_time() {
-    return (double) rdtsc / (double) rdtsc_per_sec;
+    return (double) rdtsc() / (double) rdtsc_per_sec;
   }
 
 #endif
