@@ -1,5 +1,6 @@
-// A simple memory profiler.
 // Copyright 2013 Alex Reece.
+//
+// A simple memory bandwidth profiler.
 //
 // Each of the write_memory_* functions read from a 1GB array. Each of the
 // write_memory_* writes to the 1GB array. The goal is to get the max memory

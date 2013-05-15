@@ -1,4 +1,6 @@
 // Copyright 2013 Alex Reece.
+//
+// A cross platform monotonic timer.
 
 #include <unistd.h>
 

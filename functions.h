@@ -1,4 +1,6 @@
 // Copyright 2013 Alex Reece.
+//
+// Functions fro writing to / reading from memory.
 
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_

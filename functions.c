@@ -1,4 +1,7 @@
 // Copyright 2013 Alex Reece.
+//
+// Functions for writing / reading to memory, implemented with SSE/AVX
+// intrinsics.
 
 #include "./functions.h"
 
