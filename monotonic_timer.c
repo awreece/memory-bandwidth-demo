@@ -7,8 +7,10 @@
 #define NANOS_PER_SECF 1000000000.0
 #define USECS_PER_SEC 1000000
 
-#if _POSIX_TIMERS > 0 && _POSIX_MONOTONIC_CLOCK > 0
+#if _POSIX_TIMERS > 0 && defined(_POSIX_MONOTONIC_CLOCK)
   // If we have it, use clock_gettime and CLOCK_MONOTONIC.
+  #warning Using posix clock_gettime, must link with -lrt.
+  // TODO(awreece) Manually call the syscall to avoid -lrt?
 
   #include <time.h>
 
