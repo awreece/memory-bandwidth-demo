@@ -49,18 +49,24 @@
   //      wait(2) (or another wait-type call)."
   //
   // Also, clock() only has microsecond accuracy.
-  #warning Falling back to rdtsc! Current implementation isnt satisfactory.
+  //
+  // This whitepaper offered excellent advice on how to use rdtscp for
+  // profiling: http://download.intel.com/embedded/software/IA/324264.pdf
+  //
+  // Unfortunately, we can't follow its advice exactly with our semantics,
+  // so we're just going to use rdtscp with cpuid.
+  //
+  // Note that rdtscp will only be available on new processors.
 
   #include <stdint.h>
 
   static inline uint64_t rdtsc() {
     uint32_t hi, lo;
-    // We use rdtscp to serialize, since the internet seems to think that cpuid
-    // is slow. This serialization is necessary to prevent instruction
-    // reordering, as described in this (old) pdf: http://goo.gl/7vZqT
-    //
-    // Note that rdtscp will only be available on new (
-    asm volatile("rdtscp" : "=a" (lo), "=d" (hi) : /* No input. */ : "%ecx");
+    asm volatile("rdtscp\n"
+	         "movl %%edx, %0\n"
+		 "movl %%eax, %1\n"
+	         "cpuid"
+	         : "=r" (hi), "=r" (lo) : : "%rax", "%rbx", "%rcx", "%rdx");
     return (((uint64_t)hi) << 32) | (uint64_t)lo;
   }
 
