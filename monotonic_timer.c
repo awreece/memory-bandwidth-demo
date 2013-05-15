@@ -9,13 +9,12 @@
 
 #if _POSIX_TIMERS > 0 && defined(_POSIX_MONOTONIC_CLOCK)
   // If we have it, use clock_gettime and CLOCK_MONOTONIC.
-  #warning Using posix clock_gettime, must link with -lrt.
-  // TODO(awreece) Manually call the syscall to avoid -lrt?
 
   #include <time.h>
 
   double monotonic_time() {
     struct timespec time;
+    // Note: Make sure to link with -lrt to define clock_gettime.
     clock_gettime(CLOCK_MONOTONIC, &time);
     return ((double) time.tv_sec) + ((double) time.tv_nsec / (NANOS_PER_SECF));
   }
