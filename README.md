@@ -19,5 +19,4 @@ $ ./memory_profiler
            write_memory_memset: 17.10 GiB/s
 ~~~
 
-I don't get anywhere close to the full bandwidth, even on reads. I think I
-have a bug. :(
+I don't get anywhere close to the full bandwidth, even on reads.
