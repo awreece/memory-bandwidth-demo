@@ -63,10 +63,10 @@
   static inline uint64_t rdtsc() {
     uint32_t hi, lo;
     asm volatile("rdtscp\n"
-	         "movl %%edx, %0\n"
-		 "movl %%eax, %1\n"
-	         "cpuid"
-	         : "=r" (hi), "=r" (lo) : : "%rax", "%rbx", "%rcx", "%rdx");
+                 "movl %%edx, %0\n"
+                 "movl %%eax, %1\n"
+                 "cpuid"
+                 : "=r" (hi), "=r" (lo) : : "%rax", "%rbx", "%rcx", "%rdx");
     return (((uint64_t)hi) << 32) | (uint64_t)lo;
   }
 
