@@ -11,6 +11,7 @@ I've tried a number of approaches:
 -   `read_memory_sse` uses SSE packed aligned loads to read 16 bytes at a time.
 -   `read_memory_avx` use AVX packed aligned stores to read 32 bytes at a time.
 -   `write_memory_loop` does a simple `for (i = 0; i < size; *i++ = 1);`
+-   `write_memory_rep_stosl` forces the use of the `rep stosl` instruction.
 -   `write_memory_sse` uses SSE packed aligned stores to write 16 bytes at a 
     time.
 -   `write_memory_nontemporal_sse` uses nontemporal SSE packed aligned stores to
@@ -25,17 +26,19 @@ Profiling, I get:
 ~~~
 $ ./memory_profiler
               read_memory_loop: 13.24 GiB/s
-               read_memory_sse: 15.98 GiB/s
-               read_memory_avx: 16.75 GiB/s
-             write_memory_loop: 17.01 GiB/s
-              write_memory_sse:  9.16 GiB/s
-  write_memory_nontemporal_sse: 17.00 GiB/s
-              write_memory_avx:  9.31 GiB/s
-  write_memory_nontemporal_avx: 16.53 GiB/s
-           write_memory_memset: 17.10 GiB/s
+               read_memory_sse: 15.97 GiB/s
+               read_memory_avx: 16.81 GiB/s
+             write_memory_loop: 16.84 GiB/s
+        write_memory_rep_stosl: 21.51 GiB/s
+              write_memory_sse:  9.19 GiB/s
+  write_memory_nontemporal_sse: 16.79 GiB/s
+              write_memory_avx:  9.17 GiB/s
+  write_memory_nontemporal_avx: 16.50 GiB/s
+           write_memory_memset: 16.78 GiB/s
 ~~~
 
-I don't get anywhere close to the full bandwidth, even on reads. Interestingly,
+With the exception of the `rep stosl`, I don't get anywhere close to the full 
+bandwidth, even on reads. Interestingly,
 I tried to run in single user mode to eliminate any background bus traffic and
 got results that were considerably lower than when I ran normally (I don't think
 I fully understand what is going on in single user mode):
