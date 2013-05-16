@@ -67,6 +67,8 @@ int main() {
 #endif
 
   timefun(write_memory_loop);
+  timefun(write_memory_dillon);
+  timefun(write_memory_rep_stosl);
 #ifdef __SSE4_1__
   timefun(write_memory_sse);
   timefun(write_memory_nontemporal_sse);

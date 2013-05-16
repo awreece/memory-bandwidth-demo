@@ -19,7 +19,7 @@
     return ((double) time.tv_sec) + ((double) time.tv_nsec / (NANOS_PER_SECF));
   }
 
-#elif __APPLE__
+#elif defined(__APPLE__)
   // If we don't have CLOCK_MONOTONIC, we might be on a Mac. There we instead
   // use mach_absolute_time().
 
@@ -38,8 +38,32 @@
     return dtime / NANOS_PER_SECF;
   }
 
-// #elif _WIN64
-// TODO(awreece) QueryPerformanceCounter and QueryPerformanceFrequency
+#elif defined(_MSC_VER)
+
+  #include <windows.h>
+
+  static double PCFreq = 0.0;
+
+  // According to http://stackoverflow.com/q/1113409/447288, this will
+  // make this function a constructor.
+  // TODO(awreece) Actually attempt to compile on windows.
+  static void __cdecl init_pcfreq();
+  __declspec(allocate(".CRT$XCU")) void (__cdecl*init_pcfreq_)() = init_pcfreq;
+  static void __cdecl init_pcfreq() {
+    // Accoring to http://stackoverflow.com/a/1739265/447288, this will
+    // properly initialize the QueryPerformanceCounter.
+    LARGE_INTEGER li;
+    int has_qpc = QueryPerformanceFrequency(&li);
+    assert(has_qpc);
+
+    PCFreq = ((double) li.QuadPart) / 1000.0;
+  }
+
+  double monotonic_time() {
+    LARGE_INTEGER li;
+    QueryPerformanceCounter(&li);
+    return ((double) li.QuadPart) / PCFreq;
+  }
 
 #else
   // Fall back to rdtsc. The reason we don't use clock() is this scary message
