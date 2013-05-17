@@ -20,9 +20,11 @@
 #define SAMPLES 5
 #define BYTES_PER_GB (1024*1024*1024LL)
 #define SIZE (1*BYTES_PER_GB)
+#define PAGE_SIZE (1<<12)
 
 // This must be at least 32 byte aligned to make some AVX instructions happy.
-char array[SIZE] __attribute__((aligned (32)));
+// Have PAGE_SIZE buffering so we don't have to do math for prefetching.
+char array[SIZE + PAGE_SIZE] __attribute__((aligned (32)));
 
 // Compute the bandwidth in GiB/s.
 static inline double to_bw(size_t bytes, double secs) {
@@ -64,6 +66,7 @@ int main() {
 #endif
 #ifdef __AVX__
   timefun(read_memory_avx);
+  timefun(read_memory_prefetch_avx);
 #endif
 
   timefun(write_memory_loop);

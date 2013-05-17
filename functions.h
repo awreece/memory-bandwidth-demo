@@ -17,6 +17,7 @@ void read_memory_sse(void*, size_t);
 void write_memory_nontemporal_avx(void*, size_t);
 void write_memory_avx(void*, size_t);
 void read_memory_avx(void*, size_t);
+void read_memory_prefetch_avx(void*, size_t);
 #endif
 
 void write_memory_loop(void*, size_t);
