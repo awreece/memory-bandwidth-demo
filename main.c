@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <omp.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -31,6 +32,39 @@ static inline double to_bw(size_t bytes, double secs) {
   double size_bytes = (double) bytes;
   double size_gb = size_bytes / ((double) BYTES_PER_GB);
   return size_gb / secs;
+}
+
+// Time a function, printing out time to perform the memory operation and
+// the computed memory bandwidth. Use openmp to do threading (set environment
+// variable OMP_NUM_THREADS to control threads use.
+#define timefunp(f) timeitp(f, #f)
+void timeitp(void (*function)(void*, size_t), char* name) {
+  double min = INFINITY;
+  size_t i;
+  for (i = 0; i < SAMPLES; i++) {
+    double before, after, total;
+
+    assert(SIZE % omp_get_max_threads() == 0);
+
+    size_t chunk_size = SIZE / omp_get_max_threads();
+    #pragma omp parallel
+    {
+	    #pragma omp barrier
+	    #pragma omp master
+	    before = monotonic_time();
+	    function(&array[chunk_size * omp_get_thread_num()], chunk_size);
+	    #pragma omp barrier
+	    #pragma omp master
+	    after = monotonic_time();
+    }
+
+    total = after - before;
+    if (total < min) {
+      min = total;
+    }
+  }
+
+  printf("%28s_p: %5.2f GiB/s\n", name, to_bw(SIZE, min));
 }
 
 // Time a function, printing out time to perform the memory operation and
@@ -83,6 +117,33 @@ int main() {
   timefun(write_memory_nontemporal_avx);
 #endif
   timefun(write_memory_memset);
+
+
+  memset(array, 0xFF, SIZE);  // un-ZFOD the page.
+  * ((uint64_t *) &array[SIZE]) = 0;
+
+  timefunp(read_memory_repne_scasl);
+  timefunp(read_memory_rep_lodsl);
+  timefunp(read_memory_loop);
+#ifdef __SSE4_1__
+  timefunp(read_memory_sse);
+#endif
+#ifdef __AVX__
+  timefunp(read_memory_avx);
+  timefunp(read_memory_prefetch_avx);
+#endif
+
+  timefunp(write_memory_loop);
+  timefunp(write_memory_rep_stosl);
+#ifdef __SSE4_1__
+  timefunp(write_memory_sse);
+  timefunp(write_memory_nontemporal_sse);
+#endif
+#ifdef __AVX__
+  timefunp(write_memory_avx);
+  timefunp(write_memory_nontemporal_avx);
+#endif
+  timefunp(write_memory_memset);
 
   return 0;
 }
