@@ -22,10 +22,9 @@ void write_memory_memset(void* array, size_t size) {
 }
 
 void write_memory_rep_stosl(void* buffer, size_t size) {
-  asm("movl $0, %%eax\n"
-      "cld\n"
+  asm("cld\n"
       "rep stosl"
-      : : "D" (buffer), "c" (size / 4) : "%eax");
+      : : "D" (buffer), "c" (size / 4), "a" (0) : );
 }
 
 void read_memory_rep_lodsl(void* buffer, size_t size) {
