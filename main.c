@@ -8,7 +8,9 @@
 
 #include <assert.h>
 #include <math.h>
+#ifdef WITH_OPENMP
 #include <omp.h>
+#endif  // WITH_OPENMP
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -34,6 +36,7 @@ static inline double to_bw(size_t bytes, double secs) {
   return size_gb / secs;
 }
 
+#ifdef WITH_OPENMP
 // Time a function, printing out time to perform the memory operation and
 // the computed memory bandwidth. Use openmp to do threading (set environment
 // variable OMP_NUM_THREADS to control threads use.
@@ -66,6 +69,7 @@ void timeitp(void (*function)(void*, size_t), char* name) {
 
   printf("%28s_p: %5.2f GiB/s\n", name, to_bw(SIZE, min));
 }
+#endif  // WITH_OPENMP
 
 // Time a function, printing out time to perform the memory operation and
 // the computed memory bandwidth.
@@ -118,6 +122,7 @@ int main() {
 #endif
   timefun(write_memory_memset);
 
+#ifdef WITH_OPENMP
 
   memset(array, 0xFF, SIZE);  // un-ZFOD the page.
   * ((uint64_t *) &array[SIZE]) = 0;
@@ -144,6 +149,8 @@ int main() {
   timefunp(write_memory_nontemporal_avx);
 #endif
   timefunp(write_memory_memset);
+
+#endif  // WITH_OPENMP
 
   return 0;
 }
