@@ -93,9 +93,9 @@ void read_memory_sse(void* array, size_t size) {
 
 #ifdef __AVX__
 void write_memory_nontemporal_avx(void* array, size_t size) {
-  __m256* varray = (__m256*) array;
+  __m256i* varray = (__m256i*) array;
 
-  __m256 vals = _mm256_set1_ps((float) 0xDEADBEEF);
+  __m256i vals = _mm256_set1_epi32(0xDEADBEEF);
   size_t i;
   for (i = 0; i < size / sizeof(__m256); i++) {
     _mm256_stream_si256((__m256i*) &varray[i], vals);
@@ -103,12 +103,12 @@ void write_memory_nontemporal_avx(void* array, size_t size) {
 }
 
 void write_memory_avx(void* array, size_t size) {
-  __m256* varray = (__m256*) array;
+  __m256i* varray = (__m256i*) array;
 
-  __m256 vals = _mm256_set1_ps((float) 0xDEADBEEF);
+  __m256i vals = _mm256_set1_epi32(0xDEADBEEF);
   size_t i;
   for (i = 0; i < size / sizeof(__m256i); i++) {
-    _mm256_store_si256((__m256i*) &varray[i], vals);
+    _mm256_store_si256(&varray[i], vals);
   }
 }
 
@@ -131,7 +131,7 @@ void read_memory_prefetch_avx(void* array, size_t size) {
 
   // This is unlikely, and we want to make sure the reads are not optimized
   // away.
-  assert(!_mm256_testz_si256(accum, accum));
+  assert(!_mm256_testz_ps(accum, accum));
 }
 
 void read_memory_avx(void* array, size_t size) {
@@ -144,6 +144,6 @@ void read_memory_avx(void* array, size_t size) {
 
   // This is unlikely, and we want to make sure the reads are not optimized
   // away.
-  assert(!_mm256_testz_si256(accum, accum));
+  assert(!_mm256_testz_ps(accum, accum));
 }
 #endif  // __AVX__
