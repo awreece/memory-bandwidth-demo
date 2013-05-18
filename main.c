@@ -67,7 +67,7 @@ void timeitp(void (*function)(void*, size_t), char* name) {
     }
   }
 
-  printf("%28s_p: %5.2f GiB/s\n", name, to_bw(SIZE, min));
+  printf("%30s_omp: %5.2f GiB/s\n", name, to_bw(SIZE, min));
 }
 #endif  // WITH_OPENMP
 
@@ -90,7 +90,7 @@ void timeit(void (*function)(void*, size_t), char* name) {
     }
   }
 
-  printf("%30s: %5.2f GiB/s\n", name, to_bw(SIZE, min));
+  printf("%32s: %5.2f GiB/s\n", name, to_bw(SIZE, min));
 }
 
 int main() {
