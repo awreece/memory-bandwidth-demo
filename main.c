@@ -60,6 +60,7 @@ int main() {
 
   // TODO(awreece) iopl(0) and cli/sti?
 
+  timefun(read_memory_rep_lodsl);
   timefun(read_memory_loop);
 #ifdef __SSE4_1__
   timefun(read_memory_sse);
@@ -70,7 +71,6 @@ int main() {
 #endif
 
   timefun(write_memory_loop);
-  timefun(write_memory_dillon);
   timefun(write_memory_rep_stosl);
 #ifdef __SSE4_1__
   timefun(write_memory_sse);

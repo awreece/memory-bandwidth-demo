@@ -21,9 +21,9 @@ void read_memory_prefetch_avx(void*, size_t);
 #endif
 
 void write_memory_loop(void*, size_t);
-void write_memory_dillon(void*, size_t);
 void write_memory_rep_stosl(void*, size_t);
 void read_memory_loop(void*, size_t);
+void read_memory_rep_lodsl(void*, size_t);
 void write_memory_memset(void*, size_t);
 
 #endif  // FUNCTIONS_H_

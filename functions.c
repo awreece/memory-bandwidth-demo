@@ -21,19 +21,17 @@ void write_memory_memset(void* array, size_t size) {
   memset(array, 0xff, size);
 }
 
-void write_memory_dillon(void* buffer, size_t size) {
-  int * begin = (int *)buffer;
-  int * end = (int *)(((uintptr_t) buffer) + size);
-
-  while (begin < end)
-    *begin++ = 1;
+void write_memory_rep_stosl(void* buffer, size_t size) {
+  asm("movl $0, %%eax\n"
+      "cld\n"
+      "rep stosl"
+      : : "D" (buffer), "c" (size / 4) : "%eax");
 }
 
-void write_memory_rep_stosl(void* buffer, size_t size) {
-   asm("movl $0, %%eax\n"
-       "cld\n"
-       "rep stosl"
-       : : "D" (buffer), "c" (size / 4) : "%eax");
+void read_memory_rep_lodsl(void* buffer, size_t size) {
+  asm("cld\n"
+      "rep lodsl"
+       : : "S" (buffer), "c" (size / 4) : "%eax");
 }
 
 void write_memory_loop(void* array, size_t size) {
