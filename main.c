@@ -4,7 +4,7 @@
 //
 // Each of the write_memory_* functions read from a 1GB array. Each of the
 // write_memory_* writes to the 1GB array. The goal is to get the max memory
-// bandwidth as advertised by the intel specs: 25.6 GB/s (http://goo.gl/r8Aab)
+// bandwidth as advertised by the intel specs: 23.8 GiB/s (http://goo.gl/r8Aab)
 
 #include <assert.h>
 #include <math.h>
