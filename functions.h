@@ -20,8 +20,6 @@ void read_memory_avx(void*, size_t);
 void read_memory_prefetch_avx(void*, size_t);
 #endif
 
-// Assumes no byte in input is null, and dword immediately after is 0.
-void read_memory_repne_scasl(void*, size_t);
 void write_memory_loop(void*, size_t);
 void write_memory_rep_stosl(void*, size_t);
 void read_memory_loop(void*, size_t);
