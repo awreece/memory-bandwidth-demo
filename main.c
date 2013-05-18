@@ -21,6 +21,7 @@
 #include "./monotonic_timer.h"
 
 #define SAMPLES 5
+#define TIMES 5
 #define BYTES_PER_GB (1024*1024*1024LL)
 #define SIZE (1*BYTES_PER_GB)
 #define PAGE_SIZE (1<<12)
@@ -55,7 +56,10 @@ void timeitp(void (*function)(void*, size_t), char* name) {
 #pragma omp barrier
 #pragma omp master
       before = monotonic_time();
-      function(&array[chunk_size * omp_get_thread_num()], chunk_size);
+      int j;
+      for (j = 0; j < TIMES; j++) {
+	function(&array[chunk_size * omp_get_thread_num()], chunk_size);
+      }
 #pragma omp barrier
 #pragma omp master
       after = monotonic_time();
@@ -67,7 +71,7 @@ void timeitp(void (*function)(void*, size_t), char* name) {
     }
   }
 
-  printf("%28s_omp: %5.2f GiB/s\n", name, to_bw(SIZE, min));
+  printf("%28s_omp: %5.2f GiB/s\n", name, to_bw(SIZE * TIMES, min));
 }
 #endif  // WITH_OPENMP
 
@@ -81,7 +85,10 @@ void timeit(void (*function)(void*, size_t), char* name) {
     double before, after, total;
 
     before = monotonic_time();
-    function(array, SIZE);
+    int j;
+    for (j = 0; j < TIMES; j++) {
+      function(array, SIZE);
+    }
     after = monotonic_time();
 
     total = after - before;
@@ -90,7 +97,7 @@ void timeit(void (*function)(void*, size_t), char* name) {
     }
   }
 
-  printf("%32s: %5.2f GiB/s\n", name, to_bw(SIZE, min));
+  printf("%32s: %5.2f GiB/s\n", name, to_bw(SIZE * TIMES, min));
 }
 
 int main() {
