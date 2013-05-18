@@ -50,15 +50,15 @@ void timeitp(void (*function)(void*, size_t), char* name) {
     assert(SIZE % omp_get_max_threads() == 0);
 
     size_t chunk_size = SIZE / omp_get_max_threads();
-    #pragma omp parallel
+#pragma omp parallel
     {
-	    #pragma omp barrier
-	    #pragma omp master
-	    before = monotonic_time();
-	    function(&array[chunk_size * omp_get_thread_num()], chunk_size);
-	    #pragma omp barrier
-	    #pragma omp master
-	    after = monotonic_time();
+#pragma omp barrier
+#pragma omp master
+      before = monotonic_time();
+      function(&array[chunk_size * omp_get_thread_num()], chunk_size);
+#pragma omp barrier
+#pragma omp master
+      after = monotonic_time();
     }
 
     total = after - before;
