@@ -34,6 +34,13 @@ void read_memory_rep_lodsl(void* buffer, size_t size) {
        : : "S" (buffer), "c" (size / 4) : "%eax");
 }
 
+// Assumes no byte in input is null, and dword immediately after is 0.
+void read_memory_repne_scasl(void* buffer, size_t size) {
+  asm("cld\n"
+      "repne scasl"
+       : : "S" (buffer), "c" (size / 4), "a" (0) : "%rdi");
+}
+
 void write_memory_loop(void* array, size_t size) {
   size_t* carray = (size_t*) array;
   size_t i;
