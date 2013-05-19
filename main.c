@@ -106,7 +106,7 @@ int main() {
 
   // TODO(awreece) iopl(0) and cli/sti?
 
-  timefun(read_memory_rep_lodsl);
+  timefun(read_memory_rep_lodsq);
   timefun(read_memory_loop);
 #ifdef __SSE4_1__
   timefun(read_memory_sse);
@@ -117,7 +117,7 @@ int main() {
 #endif
 
   timefun(write_memory_loop);
-  timefun(write_memory_rep_stosl);
+  timefun(write_memory_rep_stosq);
 #ifdef __SSE4_1__
   timefun(write_memory_sse);
   timefun(write_memory_nontemporal_sse);
@@ -133,7 +133,7 @@ int main() {
   memset(array, 0xFF, SIZE);  // un-ZFOD the page.
   * ((uint64_t *) &array[SIZE]) = 0;
 
-  timefunp(read_memory_rep_lodsl);
+  timefunp(read_memory_rep_lodsq);
   timefunp(read_memory_loop);
 #ifdef __SSE4_1__
   timefunp(read_memory_sse);
@@ -144,7 +144,7 @@ int main() {
 #endif
 
   timefunp(write_memory_loop);
-  timefunp(write_memory_rep_stosl);
+  timefunp(write_memory_rep_stosq);
 #ifdef __SSE4_1__
   timefunp(write_memory_sse);
   timefunp(write_memory_nontemporal_sse);

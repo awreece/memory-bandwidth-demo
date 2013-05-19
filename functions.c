@@ -21,16 +21,16 @@ void write_memory_memset(void* array, size_t size) {
   memset(array, 0xff, size);
 }
 
-void write_memory_rep_stosl(void* buffer, size_t size) {
+void write_memory_rep_stosq(void* buffer, size_t size) {
   asm("cld\n"
-      "rep stosl"
-      : : "D" (buffer), "c" (size / 4), "a" (0) );
+      "rep stosq"
+      : : "D" (buffer), "c" (size / 8), "a" (0) );
 }
 
-void read_memory_rep_lodsl(void* buffer, size_t size) {
+void read_memory_rep_lodsq(void* buffer, size_t size) {
   asm("cld\n"
-      "rep lodsl"
-       : : "S" (buffer), "c" (size / 4) : "%eax");
+      "rep lodsq"
+       : : "S" (buffer), "c" (size / 8) : "%eax");
 }
 
 void write_memory_loop(void* array, size_t size) {
